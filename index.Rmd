@@ -1,0 +1,94 @@
+---
+title: "Brisbane Apartment Analysis"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    navbar:
+      - {title: "LinkedIn", icon: "fa-linkedin", align: right, href: "https://www.linkedin.com/in/tylorbunting/"}
+      - {title: "Source Code", icon: "fa-github", align: right, href: "https://github.com/tylorbunting/Brisbane_Apartment_Analysis"}
+      - {title: "Data Source", icon: "fa-database", align: right, href: "https://www.realestate.com.au/sold/with-2-bedrooms-in-fortitude+valley,+qld+4006%3b+newstead,+qld+4006%3b+teneriffe,+qld+4005%3b+new+farm,+qld+4005%3b+spring+hill,+qld+4000%3b+bowen+hills,+qld+4006/list-12?maxBeds=2&includeSurrounding=false&misc=ex-no-sale-price&keywords=swimming%20pool%2Cstudy&checkedFeatures=swimming%20pool%2Cstudy"}
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(plotly)
+source("analyse_sold_data.R")
+```
+
+row
+-----------------------------------------------------------------------
+
+### source: www.realestate.com.au | searching sold 2 bedroom units with study and pool area {.no-mobile}
+
+```{r fig.height=3, fig.width=10}
+ggplot(plot_yearly_prices_overtime_table) +
+  aes(x = date_year, fill = average_price, weight = average_price) +
+  geom_bar() +
+  scale_fill_gradient() +
+  labs(x = "Year", y = "Sold Price (Thousands)", 
+       title = "Average Cost of 2 Bedroom Units with Study in Fortitude Valley and Surrounding Suburbs",
+       subtitle = str_c(append("Surround Suburbs include", sold_data_2_locations), collapse = " | ")) +
+  scale_y_continuous(labels=scales::dollar_format()) +
+  geom_text(aes(y = average_price , label = paste0("$", round(average_price), "k")), nudge_y = 35) +
+  theme_minimal() +
+  theme(legend.position="none")
+```
+
+### source: www.realestate.com.au | searching sold 2 bedroom units with study and pool area {.mobile}
+
+```{r}
+ggplot(plot_yearly_prices_overtime_table) +
+  aes(x = date_year, fill = average_price, weight = average_price) +
+  geom_bar() +
+  scale_fill_gradient() +
+  labs(x = "Year", y = "Sold Price (Thousands)", 
+       title = "Average Cost of 2 Bedroom Units",
+       subtitle = "Fortitude Valley and Surround Suburbs") +
+  scale_y_continuous(labels=scales::dollar_format()) +
+  geom_text(aes(y = average_price , label = paste0("$", round(average_price), "k")), nudge_y = 15, size = 2.1) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size=7, angle = 30)) +
+  theme(legend.position="none")
+```
+
+row
+-----------------------------------------------------------------------
+
+### source: www.realestate.com.au | searching sold 2 bedroom units with study and pool area {.no-mobile}
+
+```{r fig.height=3, fig.width=10}
+ggplot(plot_yearly_location_prices_overtime_table) +
+  aes(x = date_year, fill = average_price, weight = average_price) +
+  geom_bar() +
+  scale_fill_gradient() +
+  labs(x = "", y = "Sold Price (Thousands)", 
+       title = "Average Cost of 2 Bedroom Units with Study in Fortitude Valley and Surrounding Suburbs",
+       subtitle = str_c(append("Surround Suburbs include", sold_data_2_locations), collapse = " | ")) +
+  scale_y_continuous(labels=scales::dollar_format()) +
+  geom_text(aes(y = average_price , label = paste0("$", round(average_price), "k")), nudge_y = 120, size = 2.2) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size=7, angle = 30)) +
+  theme(legend.position="none") + 
+  facet_wrap(vars(location))
+```
+
+
+### source: www.realestate.com.au | searching sold 2 bedroom units with study and pool area {.mobile}
+
+```{r fig_mobile.height=2, fig_mobile.width=10}
+ggplot(plot_yearly_location_prices_overtime_table) +
+  aes(x = date_year, fill = average_price, weight = average_price) +
+  geom_bar() +
+  scale_fill_gradient() +
+  labs(x = "", y = "Sold Price (Thousands)", 
+       title = "Average Cost of 2 Bedroom Units",
+       subtitle = "Fortitude Valley and Surround Suburbs") +
+  scale_y_continuous(labels=scales::dollar_format()) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size=0, angle = 30)) +
+  theme(legend.position="none") + 
+  facet_wrap(vars(location))
+```
+
+
